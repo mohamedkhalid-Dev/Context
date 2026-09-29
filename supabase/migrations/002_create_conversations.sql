@@ -1,0 +1,10 @@
+-- 002: DEPRECATED — DO NOT APPLY. History is localStorage-only (README).
+-- Kept for reference only. Live DB correctly has NO such table.
+-- Original (Step 4 server-side) below, commented out:
+-- create table if not exists public.conversations (
+--   id uuid primary key default gen_random_uuid(),
+--   user_id uuid not null references public.profiles(user_id) on delete cascade,
+--   title text not null default 'New chat',
+--   created_at timestamptz not null default now()
+-- );
+-- create index if not exists idx_conversations_user on public.conversations(user_id);

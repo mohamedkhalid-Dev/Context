@@ -1,0 +1,21 @@
+# Secrets
+.env
+.env.local
+frontend/.env.local
+backend/.env
+
+# Deps
+node_modules/
+vendor/
+
+# Next.js
+.next/
+out/
+
+# Laravel
+bootstrap/cache/
+storage/*.key
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,12 @@
+-- 003: DEPRECATED — DO NOT APPLY. History is localStorage-only (README).
+-- Kept for reference only. Live DB correctly has NO such table.
+-- Original (Step 4 server-side) below, commented out:
+-- create table if not exists public.messages (
+--   id uuid primary key default gen_random_uuid(),
+--   conversation_id uuid not null references public.conversations(id) on delete cascade,
+--   role text not null check (role in ('user','assistant','system')),
+--   content text not null check (char_length(content) between 1 and 4000),
+--   stage text not null default 'confirmed' check (stage in ('clarifying','confirmed','answered')),
+--   created_at timestamptz not null default now()
+-- );
+-- create index if not exists idx_messages_conversation on public.messages(conversation_id);

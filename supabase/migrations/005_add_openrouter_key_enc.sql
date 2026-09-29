@@ -1,0 +1,8 @@
+-- 005: OPTIONAL server-side key column — ONLY if Laravel fallback is enabled.
+-- Local-first default (README): DO NOT APPLY. Key lives in browser
+-- localStorage only, never in Supabase. Live DB correctly has NO such column.
+-- If you enable the OPTIONAL Laravel proxy (disabled by default), apply once:
+--   alter table public.profiles add column if not exists openrouter_key_enc text;
+-- DEPRECATED for primary path — kept as opt-in reference only.
+-- alter table public.profiles
+--   add column if not exists openrouter_key_enc text;
