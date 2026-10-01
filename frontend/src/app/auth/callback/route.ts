@@ -6,7 +6,13 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const code = url.searchParams.get('code');
-  const next = url.searchParams.get('next') ?? '/onboarding';
+  // Validate `next`: same-origin path only. Blocks open-redirect payloads
+  // like `//evil.com`, `/\evil.com`, `https://evil.com`, or `javascript:`.
+  const rawNext = url.searchParams.get('next') ?? '/onboarding';
+  const next =
+    rawNext.startsWith('/') && !rawNext.startsWith('//') && !rawNext.startsWith('/\\')
+      ? rawNext
+      : '/onboarding';
 
   const res = NextResponse.redirect(new URL(next, req.url));
 
@@ -20,8 +26,18 @@ export async function GET(req: NextRequest) {
     cookies: {
       getAll: () => req.cookies.getAll(),
       setAll: (cookiesToSet: { name: string; value: string; options?: CookieOptions }[]) => {
+        // Harden session cookies at exchange: Secure (https/prod only) +
+        // HttpOnly + SameSite=lax. Mirrors middleware.ts.
+        const isSecure =
+          req.url.startsWith('https://') || process.env.NODE_ENV === 'production';
         cookiesToSet.forEach(({ name, value, options }) =>
-          res.cookies.set(name, value, options)
+          res.cookies.set(name, value, {
+            ...options,
+            httpOnly: options?.httpOnly ?? true,
+            secure: isSecure,
+            sameSite: 'lax',
+            path: options?.path ?? '/',
+          })
         );
       },
     },

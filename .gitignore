@@ -1,8 +1,23 @@
-# Secrets
+# Secrets — never commit real keys. Templates (*.example) ARE committed.
 .env
 .env.local
+.env.*.local
 frontend/.env.local
+frontend/.env.*.local
 backend/.env
+backend/.env.*
+# Re-allow committed templates (must come AFTER the ignores above)
+!frontend/.env.example
+!backend/.env.example
+# Explicit: keys / certs must never be committed
+*.pem
+*.key
+# Sensitive archives / backups must never be served from public/
+**/backup.zip
+*.zip.bak
+*.sql.bak
+**/config.php
+# Vercel local cache
 
 # Deps
 node_modules/

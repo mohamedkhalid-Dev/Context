@@ -15,8 +15,17 @@ export function createSupabaseServer() {
       getAll: () => cookieStore.getAll(),
       setAll: (cookiesToSet: { name: string; value: string; options?: CookieOptions }[]) => {
         try {
+          // Same cookie hardening as middleware: Secure (prod/https only so
+          // localhost dev works) + HttpOnly + SameSite=lax.
+          const isSecure = process.env.NODE_ENV === 'production';
           cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
+            cookieStore.set(name, value, {
+              ...options,
+              httpOnly: options?.httpOnly ?? true,
+              secure: isSecure,
+              sameSite: 'lax',
+              path: options?.path ?? '/',
+            } as CookieOptions & { path: string })
           );
         } catch {
           // Server Component: cannot set cookies — middleware refreshes the session.

@@ -50,13 +50,38 @@ export const ALLOWED_TEXT_EXTENSIONS = [
   'cpp', 'cs', 'css', 'html', 'xml', 'yml', 'yaml', 'toml', 'ini', 'sh',
 ] as const;
 // Never accept executables / installers / disk images, even renamed.
+// Also block server-executable + active-content types that must never be
+// stored or served as files (php/phtml/phar, svg). Note: `html` stays in
+// ALLOWED_TEXT_EXTENSIONS for truncated plain-text inlining only — it is
+// never given a dataUrl, never rendered as HTML, never uploaded.
 export const BLOCKED_EXTENSIONS = [
   'exe', 'msi', 'dmg', 'pkg', 'deb', 'rpm', 'apk', 'bat', 'cmd', 'com',
   'scr', 'ps1', 'vbs', 'jar', 'dll', 'sys', 'iso', 'img',
+  'php', 'phtml', 'pht', 'phar', 'svg', 'shtml', 'xhtml',
+  'hta', 'cpl', 'msc', 'reg', 'lnk', 'gadget',
 ] as const;
 // Single source of truth for client length checks (useChat, ChatInput, ClarifyingCard).
 export const MAX_MESSAGE_LENGTH = 4000;
 
+// --- Auth (Supabase Auth Email/Password) ---
+// Passwords are NEVER stored by us: Supabase Auth (GoTrue) hashes with bcrypt
+// server-side. No custom MD5/SHA1/plaintext anywhere (verified). This schema
+// only enforces minimum strength client-side; Supabase enforces its own
+// minimum (6) + optional leaked-password protection (enable in Dashboard,
+// see LoginForm header). Max 72 = bcrypt input limit.
+export const passwordSchema = z
+  .string()
+  .min(8, 'Password is too weak. Use at least 8 characters.')
+  .max(72, 'Password must be under 72 characters.');
+export const emailSchema = z
+  .string()
+  .trim()
+  .min(5, 'Please enter your email address.')
+  .max(254, 'Email is too long.')
+  .email('Please enter a valid email address (e.g. you@example.com).');
+export const loginSchema = z.object({ email: emailSchema, password: z.string().min(1, 'Please enter your password.') });
+export const signupSchema = z.object({ email: emailSchema, password: passwordSchema });
+export const forgotPasswordSchema = z.object({ email: emailSchema });
 // Custom Instructions: optional free-form system-prompt add-on
 // (e.g. tone, language, verbosity). Local-only, max 1000 chars.
 export const MAX_CUSTOM_INSTRUCTIONS_LENGTH = 1000;

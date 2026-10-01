@@ -17,7 +17,9 @@ export function useProfile() {
       }
       // Live schema: public.profiles(user_id uuid PK, name, age, email, onboarding_complete).
       // Conversation history + OpenRouter key are localStorage-only, never in Supabase.
-      const { data } = await supabase.from('profiles').select('*').eq('user_id', user.id).maybeSingle();
+      // Minimal columns only — never SELECT * (would pull openrouter_key_enc
+      // if the optional server-key column is ever added via migration 005).
+      const { data } = await supabase.from('profiles').select('user_id, name, age, email, onboarding_complete').eq('user_id', user.id).maybeSingle();
       const next = (data as Profile | null) ?? null;
       setProfile(next);
       return next;

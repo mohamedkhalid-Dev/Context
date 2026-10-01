@@ -35,6 +35,12 @@ class SupabaseAuth
             if (isset($claims['aud']) && $claims['aud'] !== 'authenticated') {
                 return response()->json(['message' => 'Unauthenticated. Please log in again.'], 401);
             }
+            // Fail closed: ownership checks downstream rely on JWT sub.
+            // Reject tokens without a valid user UUID (e.g. anon/service tokens).
+            $sub = $claims['sub'] ?? $claims['id'] ?? null;
+            if (! is_string($sub) || ! preg_match('/^[0-9a-fA-F-]{36}$/', $sub)) {
+                return response()->json(['message' => 'Unauthenticated. Please log in again.'], 401);
+            }
             $request->attributes->set('supabase_user', $claims);
         } catch (\Firebase\JWT\ExpiredException $e) {
             return response()->json(['message' => 'Session expired. Please log in again.'], 401);

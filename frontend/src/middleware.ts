@@ -14,8 +14,19 @@ export async function middleware(req: NextRequest) {
     cookies: {
       getAll: () => req.cookies.getAll(),
       setAll: (cookiesToSet: { name: string; value: string; options?: CookieOptions }[]) => {
+        // Enforce Secure + HttpOnly + SameSite=lax on Supabase Auth cookies.
+        // Secure only on https/production so http://localhost dev still works
+        // (localhost is a secure context; Vercel preview/prod is always https).
+        const isSecure =
+          req.url.startsWith('https://') || process.env.NODE_ENV === 'production';
         cookiesToSet.forEach(({ name, value, options }) =>
-          res.cookies.set(name, value, options)
+          res.cookies.set(name, value, {
+            ...options,
+            httpOnly: options?.httpOnly ?? true,
+            secure: isSecure,
+            sameSite: 'lax',
+            path: options?.path ?? '/',
+          })
         );
       },
     },

@@ -50,10 +50,11 @@ class ChatController extends Controller
             ], 402);
         }
 
-        // Optional personalization (name/age/custom_instructions) — never the key.
+        // Ownership-scoped + minimal columns (never SELECT * — would pull
+        // openrouter_key_enc into memory unnecessarily).
         $profile = null;
         try {
-            $row = \Illuminate\Support\Facades\DB::table('profiles')->where('user_id', $userId)->first();
+            $row = \Illuminate\Support\Facades\DB::table('profiles')->select(['name', 'age'])->where('user_id', $userId)->first();
             if ($row) $profile = ['name' => $row->name ?? null, 'age' => $row->age ?? null];
         } catch (\Exception) {
             $profile = null;

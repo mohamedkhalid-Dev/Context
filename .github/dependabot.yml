@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "security"
+    # Critical: next <14.2.25 has CVE-2025-29927 (middleware auth bypass).
+    # Run `npm audit` in CI and keep next/dompurify pinned to patched ranges.
+    allow:
+      - dependency-type: "all"
+
+  - package-ecosystem: "composer"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "security"
+    # Critical: laravel/framework <11.44.1 has CVE-2025-27515
+    # (wildcard file/image validation bypass); guzzlehttp/guzzle <7.15.2
+    # has GHSA-v5mv-p594-2x33 (noncanonical host bypass).

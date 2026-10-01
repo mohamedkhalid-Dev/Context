@@ -95,7 +95,11 @@ function sanitizeAttachments(attachments?: Attachment[]): Attachment[] | undefin
     size: Number.isFinite(a.size) && a.size >= 0 ? Math.floor(a.size) : 0,
     kind: a.kind === 'image' || a.kind === 'text' ? a.kind : 'file',
     dataUrl:
-      a.kind === 'image' && typeof a.dataUrl === 'string' && a.dataUrl.startsWith('data:image/')
+      a.kind === 'image' &&
+      typeof a.dataUrl === 'string' &&
+      // Allowlist raster images only: block data:image/svg+xml (script-capable)
+      // and any non-base64 / javascript: payload smuggled via tampered storage.
+      /^data:image\/(png|jpeg|jpg|webp|gif);base64,/i.test(a.dataUrl)
         ? a.dataUrl
         : undefined,
     textContent:
