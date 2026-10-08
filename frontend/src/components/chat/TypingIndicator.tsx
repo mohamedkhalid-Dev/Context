@@ -7,9 +7,10 @@ export default function TypingIndicator() {
         <Loader2 size={16} className="animate-spin" aria-hidden="true" />
         <span>Thinking — checking what is still unclear…</span>
       </div>
-      <div aria-hidden="true" className="max-w-[70%] space-y-1.5">
+      <div aria-hidden="true" className="max-w-[85%] space-y-1.5 lg:max-w-[70%]">
         <div className="h-3 animate-pulse rounded bg-neutral-200" />
         <div className="h-3 w-4/5 animate-pulse rounded bg-neutral-100" />
+        <div className="h-3 w-3/5 animate-pulse rounded bg-neutral-100" />
       </div>
     </div>
   );

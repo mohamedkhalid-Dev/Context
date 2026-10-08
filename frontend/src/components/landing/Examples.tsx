@@ -24,40 +24,45 @@ const examples = [
 
 export default function Examples() {
   return (
-    <section aria-label="Examples" className="mx-auto max-w-6xl px-4 py-20">
-      <div className="mx-auto mb-10 max-w-2xl text-center">
-        <h2 className="font-display text-3xl font-bold sm:text-4xl">Vague in, precise out</h2>
+    <section
+      aria-label="Examples"
+      className="mx-auto max-w-6xl overflow-x-hidden px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
+    >
+      <div className="mx-auto mb-8 max-w-2xl text-center sm:mb-10">
+        <h2 className="font-display text-section font-bold">Vague in, precise out</h2>
         <p className="mt-3 text-base text-gray-500">
           See how clarifying questions turn ambiguity into answers that fit.
         </p>
       </div>
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {examples.map((example) => (
           <Card key={example.topic}>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
-              {example.topic}
-            </p>
-            <p className="mt-2 rounded-md bg-gray-100 px-3 py-2 text-sm font-medium">
-              {example.vagueInput}
-            </p>
-            <p className="mt-4 text-xs font-medium uppercase tracking-wide text-gray-500">
-              Clarifying questions
-            </p>
-            <ul className="mt-2 flex flex-wrap gap-2">
-              {example.questions.map((question) => (
-                <li
-                  key={question}
-                  className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-black"
-                >
-                  {question}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-4 flex gap-2 rounded-md border border-gray-200 bg-white p-3">
-              <CheckCircle2 size={16} className="mt-0.5 shrink-0" aria-hidden />
-              <p className="text-sm text-gray-500">
-                <span className="font-medium text-black">{example.summary}</span>
+            <div className="min-w-0">
+              <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+                {example.topic}
               </p>
+              <p className="mt-2 break-words rounded-md bg-gray-100 px-3 py-2 text-sm font-medium">
+                {example.vagueInput}
+              </p>
+              <p className="mt-4 text-xs font-medium uppercase tracking-wide text-gray-500">
+                Clarifying questions
+              </p>
+              <ul className="mt-2 flex flex-wrap gap-2">
+                {example.questions.map((question) => (
+                  <li
+                    key={question}
+                    className="break-words rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-black"
+                  >
+                    {question}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-4 flex gap-2 rounded-md border border-gray-200 bg-white p-3">
+                <CheckCircle2 size={16} className="mt-0.5 shrink-0" aria-hidden />
+                <p className="min-w-0 break-words text-sm text-gray-500">
+                  <span className="font-medium text-black">{example.summary}</span>
+                </p>
+              </div>
             </div>
           </Card>
         ))}

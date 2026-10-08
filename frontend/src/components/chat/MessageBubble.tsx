@@ -101,7 +101,7 @@ export default function MessageBubble({
     <div className={cn('group flex', isUser ? 'justify-end' : 'justify-start')}>
       <div
         className={cn(
-          'max-w-[85%] break-words rounded-lg px-3 py-2 text-sm sm:max-w-[80%]',
+          'max-w-[85%] break-words rounded-lg px-3 py-2 text-[15px] leading-relaxed [overflow-wrap:anywhere] sm:text-sm lg:max-w-[70%]',
           isUser ? 'bg-black text-white' : 'border border-neutral-200 bg-white text-black'
         )}
       >
@@ -145,9 +145,9 @@ export default function MessageBubble({
           </p>
         )}
         {isUser ? (
-          <p className="whitespace-pre-wrap break-words">{message.content}</p>
+          <p className="whitespace-pre-wrap break-words leading-relaxed [overflow-wrap:anywhere]">{message.content}</p>
         ) : (
-          <div className="markdown-body min-w-0 break-words">
+          <div className="markdown-body min-w-0 break-words leading-relaxed [overflow-wrap:anywhere]">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               urlTransform={(url: string) => safeHref(url)}
@@ -250,11 +250,11 @@ export default function MessageBubble({
             aria-label={copied ? 'Copied' : 'Copy message'}
             title={copied ? 'Copied' : 'Copy message'}
             className={cn(
-              'flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] transition-opacity',
+              'flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded px-1.5 py-0.5 text-[11px] transition-opacity sm:min-h-0 sm:min-w-0',
               isUser
                 ? 'text-neutral-300 hover:text-white'
                 : 'text-neutral-400 hover:text-black',
-              'sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100'
+              'lg:opacity-0 lg:group-hover:opacity-100 lg:focus-visible:opacity-100'
             )}
           >
             {copied ? (

@@ -33,10 +33,10 @@ const faqs = [
 
 export default function FAQ() {
   return (
-    <section id="faq" className="border-t border-gray-200 bg-gray-50">
-      <div className="mx-auto max-w-3xl scroll-mt-20 px-4 py-20">
-        <div className="mb-10 text-center">
-          <h2 className="font-display text-3xl font-bold sm:text-4xl">Frequently asked questions</h2>
+    <section id="faq" className="overflow-x-hidden border-t border-gray-200 bg-gray-50">
+      <div className="mx-auto max-w-3xl scroll-mt-20 px-4 py-16 sm:px-6 sm:py-20">
+        <div className="mb-8 text-center sm:mb-10">
+          <h2 className="font-display text-section font-bold">Frequently asked questions</h2>
           <p className="mt-3 text-base text-gray-500">
             Everything you need to know before you start.
           </p>
@@ -45,12 +45,14 @@ export default function FAQ() {
           {faqs.map((faq) => (
             <details
               key={faq.question}
-              className="group rounded-lg border border-gray-200 bg-white px-5 py-4 shadow-sm"
+              className="group rounded-lg border border-gray-200 bg-white px-4 py-2 shadow-sm sm:px-5"
             >
-              <summary className="cursor-pointer text-sm font-medium marker:text-gray-500">
+              <summary className="flex min-h-[44px] cursor-pointer list-none items-center py-2 text-base font-medium marker:text-gray-500">
                 {faq.question}
               </summary>
-              <p className="mt-2 text-sm text-gray-500">{faq.answer}</p>
+              <p className="pb-3 text-sm leading-relaxed text-gray-500 sm:text-[15px]">
+                {faq.answer}
+              </p>
             </details>
           ))}
         </div>

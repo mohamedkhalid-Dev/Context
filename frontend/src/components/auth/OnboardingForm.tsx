@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { KeyRound, ShieldCheck, User } from 'lucide-react';
+import { KeyRound, ShieldCheck, User, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { onboardingSchema, STORAGE_KEYS } from '@/lib/validation';
 import { setOpenRouterKey } from '@/lib/storage';
@@ -15,6 +15,7 @@ export default function OnboardingForm() {
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [apiKey, setApiKey] = useState('');
+  const [showKey, setShowKey] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -83,14 +84,69 @@ export default function OnboardingForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
-      {error && <ErrorAlert message={error} />}
+    <form onSubmit={handleSubmit} className="w-full rounded-lg border border-neutral-200 bg-white p-4 shadow-sm sm:p-6" noValidate>
+      {error && <ErrorAlert message={error} onDismiss={() => setError('')} />}
       <div className="space-y-4">
-        <Input label="Your name" icon={<User size={16} />} required value={name} onChange={(e) => setName(e.target.value)} placeholder="Ada Lovelace" />
-        <Input label="Your age" type="number" min={13} max={120} required value={age} onChange={(e) => setAge(e.target.value)} placeholder="25" />
-        <Input label="OpenRouter API key" icon={<KeyRound size={16} />} type="password" required value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="sk-or-..." />
-        <p className="flex items-start gap-2 text-xs text-neutral-500">
-          <ShieldCheck size={14} className="mt-0.5 shrink-0" />
+        <Input
+          label="Your name"
+          name="name"
+          icon={<User size={16} />}
+          required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Ada Lovelace"
+          type="text"
+          autoComplete="name"
+          autoCapitalize="words"
+          autoCorrect="off"
+          spellCheck={false}
+          enterKeyHint="next"
+          maxLength={80}
+        />
+        <Input
+          label="Your age"
+          name="age"
+          type="number"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          min={13}
+          max={120}
+          required
+          value={age}
+          onChange={(e) => setAge(e.target.value)}
+          placeholder="25"
+          autoComplete="off"
+          enterKeyHint="next"
+        />
+        <Input
+          label="OpenRouter API key"
+          name="openrouter_api_key"
+          icon={<KeyRound size={16} />}
+          type={showKey ? 'text' : 'password'}
+          required
+          value={apiKey}
+          onChange={(e) => setApiKey(e.target.value)}
+          placeholder="sk-or-..."
+          autoComplete="off"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          inputMode="text"
+          enterKeyHint="done"
+          endAdornment={
+            <button
+              type="button"
+              onClick={() => setShowKey((v) => !v)}
+              aria-label={showKey ? 'Hide API key' : 'Show API key'}
+              aria-pressed={showKey}
+              className="flex min-h-[44px] min-w-[44px] touch-manipulation items-center justify-center rounded text-neutral-500 hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+            >
+              {showKey ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+            </button>
+          }
+        />
+        <p className="flex items-start gap-2 text-xs leading-relaxed text-neutral-500">
+          <ShieldCheck size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
           <span>
             Your name, age and email are stored in Supabase. Your OpenRouter key stays in
             this browser only (localStorage) and is sent only to OpenRouter — we never
@@ -99,7 +155,7 @@ export default function OnboardingForm() {
               href="https://openrouter.ai/keys"
               target="_blank"
               rel="noreferrer"
-              className="font-medium text-black underline underline-offset-2"
+              className="inline-flex min-h-[44px] items-center font-medium text-black underline underline-offset-2"
             >
               openrouter.ai/keys
             </a>

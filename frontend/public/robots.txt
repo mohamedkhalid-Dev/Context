@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /chat
+Disallow: /onboarding
+Disallow: /api/
+
+Sitemap: https://context-teal-nine.vercel.app/sitemap.xml

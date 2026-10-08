@@ -110,6 +110,7 @@ export default function ChatInput({
         'rounded-2xl border bg-white shadow-sm transition-colors',
         dragging ? 'border-black border-dashed bg-neutral-50' : 'border-neutral-200 focus-within:border-black'
       )}
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       {/* Attachment previews */}
       {attachments.length > 0 && (
@@ -207,7 +208,7 @@ export default function ChatInput({
         maxLength={MAX_MESSAGE_LENGTH}
         disabled={disabled && !streaming}
         autoComplete="off"
-        className="max-h-[180px] w-full resize-none bg-transparent px-4 pb-1 pt-3 text-sm outline-none placeholder:text-neutral-400 disabled:bg-transparent disabled:text-neutral-400"
+        className="max-h-[180px] min-h-[48px] w-full resize-none bg-transparent px-4 pb-1 pt-3 text-[16px] leading-relaxed outline-none placeholder:text-neutral-400 disabled:bg-transparent disabled:text-neutral-400 sm:text-sm"
       />
 
       {/* Toolbar */}
@@ -235,7 +236,7 @@ export default function ChatInput({
               ? `Up to ${MAX_ATTACHMENTS_PER_MESSAGE} files per message`
               : 'Attach images or files (or drag & drop, paste)'
           }
-          className="rounded-lg p-2 text-neutral-500 hover:bg-neutral-100 hover:text-black disabled:opacity-40"
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-neutral-500 hover:bg-neutral-100 hover:text-black disabled:opacity-40"
         >
           {reading ? (
             <Loader2 size={18} strokeWidth={1.75} aria-hidden="true" className="animate-spin" />
@@ -268,7 +269,7 @@ export default function ChatInput({
             onClick={onStop}
             aria-label="Stop generating"
             title="Stop generating"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-white"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-white"
           >
             <Square size={15} strokeWidth={1.75} fill="currentColor" aria-hidden="true" />
           </button>
@@ -280,7 +281,7 @@ export default function ChatInput({
               submit();
             }}
             disabled={!canSend}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-white disabled:opacity-30"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-white disabled:opacity-30"
             aria-label="Send message"
             title="Send message"
           >

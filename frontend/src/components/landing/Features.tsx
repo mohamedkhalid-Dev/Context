@@ -36,19 +36,22 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="features" className="mx-auto max-w-6xl scroll-mt-20 px-4 pb-20">
-      <div className="mx-auto mb-10 max-w-2xl text-center">
-        <h2 className="font-display text-3xl font-bold sm:text-4xl">Built to understand first</h2>
+    <section
+      id="features"
+      className="mx-auto max-w-6xl scroll-mt-20 overflow-x-hidden px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8"
+    >
+      <div className="mx-auto mb-8 max-w-2xl text-center sm:mb-10">
+        <h2 className="font-display text-section font-bold">Built to understand first</h2>
         <p className="mt-3 text-base text-gray-500">
           Most chatbots guess. Context clarifies — then answers with precision.
         </p>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {features.map((f) => (
           <Card key={f.title}>
             <f.icon size={22} className="mb-3" aria-hidden />
             <h3 className="font-display font-semibold">{f.title}</h3>
-            <p className="mt-1 text-sm text-gray-500">{f.text}</p>
+            <p className="mt-1 text-sm leading-relaxed text-gray-500">{f.text}</p>
           </Card>
         ))}
       </div>

@@ -1,7 +1,7 @@
 export default function ChatLoading() {
   return (
-    <div className="flex h-screen bg-white text-black" aria-busy="true" aria-label="Loading chat">
-      <div className="hidden w-64 shrink-0 space-y-2 border-r border-neutral-200 p-4 sm:block">
+    <div className="flex h-[100dvh] bg-white text-black" aria-busy="true" aria-label="Loading chat">
+      <div className="hidden w-64 shrink-0 space-y-2 border-r border-neutral-200 p-4 lg:block">
         <div className="h-8 animate-pulse rounded-md bg-neutral-200" />
         <div className="h-10 animate-pulse rounded-md bg-neutral-100" />
         <div className="h-10 animate-pulse rounded-md bg-neutral-100" />

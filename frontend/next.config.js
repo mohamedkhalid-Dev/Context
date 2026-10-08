@@ -7,6 +7,11 @@ const nextConfig = {
   poweredByHeader: false,
   images: {
     formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 31536000,
+  },
+  experimental: {
+    // Trim client JS: lucide-react + markdown are import-heavy.
+    optimizePackageImports: ['lucide-react', 'react-markdown'],
   },
   // Security headers: CSP, frame-ancestors, HSTS, nosniff, referrer.
   async headers() {

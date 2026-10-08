@@ -35,10 +35,10 @@ export default async function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-white px-4">
+    <div className="flex min-h-[100dvh] items-center justify-center overflow-y-auto bg-white px-4 py-8">
       <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <h1 className="font-display text-3xl font-bold text-black">Welcome back</h1>
+        <div className="mb-6 text-center sm:mb-8">
+          <h1 className="font-display text-2xl font-bold text-black sm:text-3xl">Welcome back</h1>
           <p className="mt-2 text-sm text-neutral-500">
             Log in to continue to Context.
           </p>

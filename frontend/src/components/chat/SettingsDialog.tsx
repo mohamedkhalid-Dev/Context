@@ -220,7 +220,7 @@ export default function SettingsDialog({
               placeholder="sk-or-..."
               autoComplete="off"
               spellCheck={false}
-              className="mt-2 w-full rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 font-mono text-sm outline-none focus:border-black focus:bg-white"
+              className="mt-2 w-full rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 font-mono text-[16px] outline-none focus:border-black focus:bg-white sm:text-sm"
             />
             <div className="mt-2 flex gap-2">
               <button
@@ -272,7 +272,7 @@ export default function SettingsDialog({
               placeholder="Your name"
               autoComplete="name"
               maxLength={100}
-              className="mt-2 w-full rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm outline-none focus:border-black focus:bg-white"
+              className="mt-2 w-full rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-[16px] outline-none focus:border-black focus:bg-white sm:text-sm"
             />
             <button
               type="button"
@@ -312,7 +312,7 @@ export default function SettingsDialog({
               placeholder="e.g. Explain like I'm 5. Always give code examples."
               rows={3}
               maxLength={MAX_CUSTOM_INSTRUCTIONS_LENGTH}
-              className="mt-2 max-h-[160px] w-full resize-y rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm outline-none focus:border-black focus:bg-white"
+              className="mt-2 max-h-[160px] w-full resize-y rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-[16px] outline-none focus:border-black focus:bg-white sm:text-sm"
             />
             <div className="mt-1 flex items-center justify-between">
               <span className="text-[11px] text-neutral-400">

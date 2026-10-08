@@ -15,7 +15,11 @@ const OG_IMAGE = `${SITE_URL}/og-image.png`;
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#0a0a0a',
+  viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
+  ],
 };
 
 export const metadata: Metadata = {
@@ -61,11 +65,17 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true },
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
   },
   alternates: { canonical: `${SITE_URL}/` },
-  icons: { icon: [{ url: '/favicon.ico' }, { url: '/logo.svg', type: 'image/svg+xml' }] },
+  icons: {
+    icon: [{ url: '/favicon.ico' }, { url: '/logo.svg', type: 'image/svg+xml' }],
+    apple: [{ url: '/favicon.ico' }],
+  },
   manifest: '/manifest.webmanifest',
+  applicationName: 'Context',
+  appleWebApp: { capable: true, title: 'Context', statusBarStyle: 'black-translucent' },
+  formatDetection: { telephone: false },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -35,7 +35,7 @@ export default function ConversationPage() {
 
   if (sessionLoading || profileLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white">
+      <div className="flex min-h-[100dvh] items-center justify-center bg-white">
         <div className="w-full max-w-sm space-y-2 px-4" aria-busy="true" aria-label="Loading conversation">
           <div className="h-4 animate-pulse rounded bg-neutral-200" />
           <div className="h-4 w-3/4 animate-pulse rounded bg-neutral-100" />
@@ -46,7 +46,7 @@ export default function ConversationPage() {
   }
 
   return (
-    <div className="relative flex h-screen bg-white text-black">
+    <div className="relative flex h-[100dvh] bg-white text-black">
       <Sidebar activeId={conversationId} />
       <main className="flex min-w-0 flex-1 flex-col">
         <ChatWindow

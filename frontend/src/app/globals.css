@@ -10,19 +10,75 @@
   --gray-200: #e5e5e5;
   --gray-500: #737373;
   --gray-900: #1a1a1a;
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
 }
 
 html {
   font-family: var(--font-inter), system-ui, sans-serif;
-}
-
-.font-display {
-  font-family: var(--font-display), var(--font-inter), system-ui, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 body {
   background: var(--white);
   color: var(--black);
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Remove gray tap flash on mobile, keep visible focus rings for a11y */
+a,
+button,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Media never overflows its container on small screens */
+img,
+video,
+svg {
+  max-width: 100%;
+}
+
+/* Prevent iOS Safari auto-zoom on form fields (16px minimum) */
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
+/* Fluid hero / section headings: smooth scaling without breakpoints */
+.text-hero {
+  font-size: clamp(2rem, 7vw + 1rem, 3.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.text-section {
+  font-size: clamp(1.5rem, 4vw + 1rem, 2.25rem);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+/* Safe-area helpers for notched devices */
+.pt-safe {
+  padding-top: var(--sat);
+}
+
+.pb-safe {
+  padding-bottom: var(--sab);
+}
+
+/* Long words / code chips wrap instead of causing horizontal scroll */
+.break-anywhere {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.font-display {
+  font-family: var(--font-display), var(--font-inter), system-ui, sans-serif;
 }
 
 /* Subtle monochrome scrollbar */
@@ -35,4 +91,26 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--gray-200);
   border-radius: 4px;
+}
+
+/* ClarifyingCard entrance: subtle fade + slide-up (no animation library). */
+@keyframes clarifying-fade-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.clarifying-enter {
+  animation: clarifying-fade-slide-in 0.25s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clarifying-enter {
+    animation: none;
+  }
 }

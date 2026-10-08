@@ -5,6 +5,10 @@
   "trailingSlash": false,
   "headers": [
     {
+      "source": "/(favicon.ico|logo.svg|og-image.png|manifest.webmanifest|robots.txt|sitemap.xml)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=86400" }]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },

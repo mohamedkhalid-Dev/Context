@@ -184,7 +184,7 @@ export default function ModelPicker({ compact = false }: { compact?: boolean }) 
                   placeholder="Search models… (e.g. claude, llama, gpt)"
                   aria-label="Search models"
                   autoComplete="off"
-                  className="w-full rounded-md border border-neutral-200 bg-neutral-50 py-2 pl-9 pr-8 text-sm outline-none focus:border-black focus:bg-white"
+                  className="w-full rounded-md border border-neutral-200 bg-neutral-50 py-2 pl-9 pr-8 text-[16px] outline-none focus:border-black focus:bg-white sm:text-sm"
                 />
                 {query && (
                   <button

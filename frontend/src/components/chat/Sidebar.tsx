@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   MessageSquare,
@@ -60,6 +60,9 @@ export default function Sidebar({
   const [draft, setDraft] = useState('');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [customPreview, setCustomPreview] = useState<string | null>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const touchStartX = useRef<number | null>(null);
 
   const refresh = useCallback(() => {
     setConversations(loadConversations());
@@ -77,7 +80,7 @@ export default function Sidebar({
     refresh();
     refreshCustom();
     const toggle = () => {
-      if (typeof window !== 'undefined' && window.innerWidth < 640) {
+      if (typeof window !== 'undefined' && window.innerWidth < 1024) {
         setMobileOpen((v) => !v);
       } else {
         setDesktopCollapsed((v) => !v);
@@ -106,6 +109,60 @@ export default function Sidebar({
   useEffect(() => {
     refresh();
   }, [activeId, refresh]);
+
+  // Body scroll lock while the mobile drawer is open.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileOpen]);
+
+  // Focus trap + autofocus close button + Esc/swipe-to-close for the drawer.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    closeBtnRef.current?.focus();
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setMobileOpen(false);
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const root = drawerRef.current;
+      if (!root) return;
+      const focusables = root.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [mobileOpen]);
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0]?.clientX ?? null;
+  }
+
+  function handleTouchMove(e: React.TouchEvent) {
+    if (touchStartX.current === null) return;
+    const dx = e.touches[0].clientX - touchStartX.current;
+    // Swipe left to close the left-anchored drawer.
+    if (dx < -60) {
+      touchStartX.current = null;
+      setMobileOpen(false);
+    }
+  }
 
   function handleNewChat() {
     const conv = createConversation();
@@ -174,23 +231,39 @@ export default function Sidebar({
     : conversations;
 
   const panel = (
-    <div className="flex h-full w-64 flex-col border-r border-neutral-200 bg-white">
+    <div className="flex h-full w-64 max-w-[85vw] flex-col border-r border-neutral-200 bg-white">
       <div className="flex items-center gap-2 p-3">
         <button
           type="button"
           onClick={handleNewChat}
           aria-label="Start new chat"
           title="Start new chat"
-          className="flex w-full items-center justify-center gap-2 rounded-md bg-black px-3 py-2 text-sm text-white"
+          className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-md bg-black px-3 py-2 text-sm text-white"
         >
           <Plus size={16} strokeWidth={1.75} aria-hidden="true" /> New chat
+        </button>
+        <button
+          type="button"
+          ref={closeBtnRef}
+          onClick={() => {
+            if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+              setMobileOpen(false);
+            } else {
+              setDesktopCollapsed(true);
+            }
+          }}
+          aria-label="Close sidebar"
+          title="Close sidebar"
+          className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-md hover:bg-neutral-100 lg:hidden"
+        >
+          <X size={18} strokeWidth={1.75} aria-hidden="true" />
         </button>
         <button
           type="button"
           onClick={() => setDesktopCollapsed(true)}
           aria-label="Close sidebar"
           title="Close sidebar"
-          className="hidden shrink-0 rounded-md p-2 hover:bg-neutral-100 sm:block"
+          className="hidden min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-md hover:bg-neutral-100 lg:flex"
         >
           <PanelLeftClose size={18} strokeWidth={1.75} aria-hidden="true" />
         </button>
@@ -215,7 +288,7 @@ export default function Sidebar({
             placeholder="Search chats…"
             aria-label="Search conversations"
             autoComplete="off"
-            className="w-full rounded-md border border-neutral-200 bg-neutral-50 py-2 pl-9 pr-8 text-sm outline-none focus:border-black focus:bg-white"
+            className="w-full rounded-md border border-neutral-200 bg-neutral-50 py-2 pl-9 pr-8 text-[16px] outline-none focus:border-black focus:bg-white lg:text-sm"
           />
           {query && (
             <button
@@ -288,7 +361,7 @@ export default function Sidebar({
                           onClick={() => startRename(c)}
                           aria-label={`Rename ${c.title || 'chat'}`}
                           title="Rename chat"
-                          className="shrink-0 rounded p-1.5 text-neutral-400 hover:bg-white hover:text-black sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+                          className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded p-1.5 text-neutral-400 hover:bg-white hover:text-black lg:min-h-0 lg:min-w-0 lg:opacity-0 lg:group-hover:opacity-100 lg:focus-visible:opacity-100"
                         >
                           <Pencil size={14} strokeWidth={1.75} aria-hidden="true" />
                         </button>
@@ -297,7 +370,7 @@ export default function Sidebar({
                           onClick={() => handleDelete(c.id)}
                           aria-label={`Delete ${c.title || 'chat'}`}
                           title="Delete chat"
-                          className="shrink-0 rounded p-1.5 text-neutral-400 hover:bg-white hover:text-black sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+                          className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded p-1.5 text-neutral-400 hover:bg-white hover:text-black lg:min-h-0 lg:min-w-0 lg:opacity-0 lg:group-hover:opacity-100 lg:focus-visible:opacity-100"
                         >
                           <Trash2 size={14} strokeWidth={1.75} aria-hidden="true" />
                         </button>
@@ -355,7 +428,7 @@ export default function Sidebar({
   );
 
   const collapsedRail = (
-    <div className="hidden h-full w-14 flex-col items-center gap-2 border-r border-neutral-200 bg-white py-3 sm:flex">
+    <div className="hidden h-full w-14 flex-col items-center gap-2 border-r border-neutral-200 bg-white py-3 lg:flex">
       <button
         type="button"
         onClick={() => setDesktopCollapsed(false)}
@@ -380,30 +453,48 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Mobile toggle: sidebar hidden by default, opens as overlay drawer. */}
+      {/* Mobile toggle (hamburger): sidebar hidden by default below lg, opens as slide-over drawer. */}
       <button
         type="button"
         onClick={() => setMobileOpen((v) => !v)}
         aria-expanded={mobileOpen}
         aria-label={mobileOpen ? 'Close chat history' : 'Open chat history'}
-        className="absolute left-3 top-3 z-30 flex items-center gap-1.5 rounded-md border border-neutral-200 bg-white px-2.5 py-1.5 text-xs shadow-sm sm:hidden"
+        className="absolute left-3 top-3 z-30 flex min-h-[44px] min-w-[44px] items-center justify-center gap-1.5 rounded-md border border-neutral-200 bg-white px-2.5 py-1.5 text-xs shadow-sm lg:hidden"
       >
-        <MessageSquare size={14} strokeWidth={1.75} aria-hidden="true" />
-        {mobileOpen ? 'Close' : 'History'}
+        {mobileOpen ? (
+          <X size={16} strokeWidth={1.75} aria-hidden="true" />
+        ) : (
+          <PanelLeftOpen size={16} strokeWidth={1.75} aria-hidden="true" />
+        )}
+        <span className="sr-only">{mobileOpen ? 'Close' : 'History'}</span>
+        <span aria-hidden="true">{mobileOpen ? 'Close' : 'History'}</span>
       </button>
-      {mobileOpen && (
-        <div className="fixed inset-0 z-40 sm:hidden" role="dialog" aria-label="Chat history">
-          <button
-            type="button"
-            aria-label="Close chat history overlay"
-            onClick={() => setMobileOpen(false)}
-            className="absolute inset-0 bg-black/40"
-          />
-          <div className="absolute inset-y-0 left-0">{panel}</div>
+      {/* Slide-over drawer with overlay backdrop; transition on translate-x. */}
+      <div
+        className={`fixed inset-0 z-40 lg:hidden ${mobileOpen ? '' : 'pointer-events-none'}`}
+        aria-hidden={!mobileOpen}
+      >
+        <button
+          type="button"
+          aria-label="Close chat history overlay"
+          tabIndex={mobileOpen ? 0 : -1}
+          onClick={() => setMobileOpen(false)}
+          className={`absolute inset-0 bg-black/40 transition-opacity duration-200 ${mobileOpen ? 'opacity-100' : 'opacity-0'}`}
+        />
+        <div
+          ref={drawerRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Chat history"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          className={`absolute inset-y-0 left-0 h-[100dvh] shadow-xl transition-transform duration-200 ease-out ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        >
+          {panel}
         </div>
-      )}
+      </div>
       {/* Desktop: collapsible sidebar or slim rail */}
-      <aside className="hidden h-full shrink-0 sm:block">
+      <aside className="hidden h-full shrink-0 lg:block">
         {desktopCollapsed ? collapsedRail : panel}
       </aside>
       <SettingsDialog

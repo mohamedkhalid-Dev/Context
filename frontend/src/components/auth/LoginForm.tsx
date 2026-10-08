@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { LogIn } from 'lucide-react';
+import { LogIn, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { emailSchema, passwordSchema } from '@/lib/validation';
 import Button from '@/components/ui/Button';
@@ -175,6 +175,7 @@ export default function LoginForm() {
   const [resending, setResending] = useState(false);
   const [showResend, setShowResend] = useState(false);
   const [lockoutRemainingMs, setLockoutRemainingMs] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Hydrate lockout state on mount + tick countdown.
   useEffect(() => {
@@ -367,7 +368,7 @@ export default function LoginForm() {
   const isForgot = mode === 'forgot';
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm" noValidate>
+    <form onSubmit={handleSubmit} className="w-full rounded-lg border border-neutral-200 bg-white p-4 shadow-sm sm:p-6" noValidate>
       {notice && <ErrorAlert message={notice.message} variant={notice.kind} onDismiss={() => setNotice(null)} />}
       {error && (
         <div>
@@ -377,7 +378,7 @@ export default function LoginForm() {
               type="button"
               onClick={handleResend}
               disabled={resending}
-              className="mb-4 w-full rounded-md border border-neutral-200 px-3 py-2 text-sm hover:border-black disabled:opacity-50"
+              className="mb-4 flex min-h-[48px] w-full touch-manipulation items-center justify-center rounded-md border border-neutral-200 px-3 py-3 text-sm hover:border-black disabled:opacity-50"
             >
               {resending ? 'Re-sending…' : 'Resend confirmation email'}
             </button>
@@ -385,26 +386,61 @@ export default function LoginForm() {
         </div>
       )}
       <div className="space-y-4">
-        <Input label="Email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" />
+        <Input
+          label="Email"
+          type="email"
+          name="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@example.com"
+          autoComplete="email"
+          inputMode="email"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          enterKeyHint={isForgot ? 'go' : 'next'}
+        />
         {!isForgot && (
-          <Input label="Password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} />
+          <Input
+            label="Password"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+            enterKeyHint="go"
+            endAdornment={
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showPassword}
+                className="flex min-h-[44px] min-w-[44px] touch-manipulation items-center justify-center rounded text-neutral-500 hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+              >
+                {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+              </button>
+            }
+          />
         )}
         <Button type="submit" className="w-full" disabled={loading || locked}>
           <LogIn size={16} />{' '}
           {loading ? 'Please wait…' : locked ? `Locked — try in ${formatWait(lockoutRemainingMs)}` : mode === 'signin' ? 'Log in' : mode === 'signup' ? 'Create account' : 'Send reset email'}
         </Button>
         {mode === 'signin' && (
-          <button type="button" onClick={() => switchMode('forgot')} className="w-full text-center text-sm text-neutral-500 hover:text-black">
+          <button type="button" onClick={() => switchMode('forgot')} className="flex min-h-[44px] w-full touch-manipulation items-center justify-center text-center text-sm text-neutral-500 hover:text-black">
             Forgot password?
           </button>
         )}
-        <p className="text-center text-xs text-neutral-500">
+        <p className="text-center text-xs leading-relaxed text-neutral-500">
           {mode === 'signup' ? 'By creating an account, you agree to our ' : 'By continuing, you agree to our '}
-          <Link href="/terms" className="underline hover:text-black">
+          <Link href="/terms" className="inline-flex min-h-[44px] items-center underline underline-offset-2 hover:text-black">
             Terms of Service
           </Link>
           {' and '}
-          <Link href="/privacy" className="underline hover:text-black">
+          <Link href="/privacy" className="inline-flex min-h-[44px] items-center underline underline-offset-2 hover:text-black">
             Privacy Policy
           </Link>
           .
@@ -413,7 +449,7 @@ export default function LoginForm() {
       <button
         type="button"
         onClick={() => switchMode(isForgot ? 'signin' : mode === 'signin' ? 'signup' : 'signin')}
-        className="mt-4 w-full text-center text-sm text-neutral-500 hover:text-black"
+        className="mt-4 flex min-h-[44px] w-full touch-manipulation items-center justify-center text-center text-sm text-neutral-500 hover:text-black"
       >
         {isForgot ? 'Back to log in' : mode === 'signin' ? 'No account? Create one' : 'Have an account? Log in'}
       </button>

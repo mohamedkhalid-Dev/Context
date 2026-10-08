@@ -91,20 +91,35 @@ export default function MfaEnroll() {
   if (done) return <p className="text-sm">Two-factor authentication is enabled for this account.</p>;
 
   return (
-    <div className="space-y-3 rounded-lg border border-neutral-200 p-4">
-      <h3 className="text-sm font-semibold">Enable two-factor authentication (optional)</h3>
+    <div className="w-full space-y-3 rounded-lg border border-neutral-200 bg-white p-4 sm:p-6">
+      <h3 className="text-sm font-semibold text-black">Enable two-factor authentication (optional)</h3>
       {error && <ErrorAlert message={error} onDismiss={() => setError('')} />}
       {!factorId ? (
-        <Button type="button" onClick={enroll} disabled={loading}>
+        <Button type="button" onClick={enroll} disabled={loading} className="w-full">
           {loading ? 'Please wait…' : 'Start 2FA enrollment'}
         </Button>
       ) : (
-        <form onSubmit={verify} className="space-y-3">
-          <p className="break-all text-xs text-neutral-500">
+        <form onSubmit={verify} className="w-full space-y-3" noValidate>
+          <p className="break-all text-xs leading-relaxed text-neutral-500">
             Scan this URI with your authenticator app (render as QR in production): {totpUri}
           </p>
-          <Input label="6-digit code" required value={code} onChange={(e) => setCode(e.target.value)} placeholder="123456" inputMode="numeric" maxLength={6} />
-          <Button type="submit" disabled={loading}>
+          <Input
+            label="6-digit code"
+            name="mfa-code"
+            required
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder="123456"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            autoComplete="one-time-code"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            enterKeyHint="done"
+            maxLength={6}
+          />
+          <Button type="submit" disabled={loading} className="w-full">
             {loading ? 'Verifying…' : 'Verify & enable 2FA'}
           </Button>
         </form>

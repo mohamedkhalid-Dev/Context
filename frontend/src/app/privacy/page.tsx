@@ -36,12 +36,12 @@ const sections = [
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen overflow-x-hidden bg-white text-black">
       <Navbar />
-      <main className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
+      <main className="mx-auto max-w-3xl overflow-x-hidden px-4 py-12 sm:px-6 sm:py-16">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black"
+          className="inline-flex min-h-[44px] items-center gap-2 text-sm text-gray-500 hover:text-black"
         >
           <ArrowLeft size={16} /> Back to home
         </Link>

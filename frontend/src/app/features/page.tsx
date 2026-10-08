@@ -105,9 +105,9 @@ const comparison: { label: string; standard: string; understood: string }[] = [
 
 export default function FeaturesPage() {
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen overflow-x-hidden bg-white text-black">
       <Navbar />
-      <main className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <main className="mx-auto max-w-6xl overflow-x-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-medium uppercase tracking-widest text-neutral-500">
             Features
@@ -159,8 +159,8 @@ export default function FeaturesPage() {
 
         <div className="mt-12 flex flex-col items-center gap-3 text-center">
           <p className="text-sm text-neutral-500">Experience the difference in one conversation.</p>
-          <Link href="/login">
-            <Button size="lg">
+          <Link href="/login" className="w-full sm:w-auto">
+            <Button size="lg" className="min-h-[44px] w-full sm:w-auto">
               Start Free <ArrowRight size={18} />
             </Button>
           </Link>
